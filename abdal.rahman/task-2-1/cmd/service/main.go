@@ -1,4 +1,4 @@
-package main
+﻿package main
 
 import (
 	"errors"
@@ -37,7 +37,6 @@ func (d *DeptTemp) UpdateTemp(op string, temp int) error {
 	default:
 		return ErrBadOperator
 	}
-
 	return nil
 }
 
@@ -45,7 +44,6 @@ func (d *DeptTemp) CurrentTemp() (int, error) {
 	if d.Min > d.Max {
 		return -1, ErrTempOutOfRange
 	}
-
 	return d.Min, nil
 }
 
@@ -54,34 +52,32 @@ func main() {
 
 	if _, err := fmt.Scan(&numDeps); err != nil || numDeps < MinDepartments || numDeps > MaxDepartments {
 		fmt.Println("Error:", ErrReadDepartments)
-
 		return
 	}
 
-	for range numDeps {
+	for i := 0; i < numDeps; i++ {
 		var numEmps int
 
 		if _, err := fmt.Scan(&numEmps); err != nil {
 			fmt.Println("Error:", ErrReadEmployees)
-
 			return
 		}
 
 		dept := DeptTemp{Min: TempMin, Max: TempMax}
 
-		for range numEmps {
+		for j := 0; j < numEmps; j++ {
+
+			// سطر فارغ قبل تعريف المتغيرات الجديد
 			var operation string
 			var temperature int
 
 			if _, err := fmt.Scan(&operation, &temperature); err != nil {
 				fmt.Println("Error: invalid input")
-
 				return
 			}
 
 			if err := dept.UpdateTemp(operation, temperature); err != nil {
 				fmt.Println("Error:", err)
-
 				return
 			}
 
