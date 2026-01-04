@@ -37,6 +37,7 @@ func (d *DeptTemp) UpdateTemp(op string, temp int) error {
 	default:
 		return ErrBadOperator
 	}
+
 	return nil
 }
 
@@ -44,18 +45,21 @@ func (d *DeptTemp) CurrentTemp() (int, error) {
 	if d.Min > d.Max {
 		return -1, ErrTempOutOfRange
 	}
+
 	return d.Min, nil
 }
 
 func main() {
 	var numDeps int
+
 	if _, err := fmt.Scan(&numDeps); err != nil || numDeps < MinDepartments || numDeps > MaxDepartments {
 		fmt.Println("Error:", ErrReadDepartments)
 		return
 	}
 
-	for i := 0; i < numDeps; i++ {
+	for depIndex := 0; depIndex < numDeps; depIndex++ {
 		var numEmps int
+
 		if _, err := fmt.Scan(&numEmps); err != nil {
 			fmt.Println("Error:", ErrReadEmployees)
 			return
@@ -63,15 +67,16 @@ func main() {
 
 		dept := DeptTemp{Min: TempMin, Max: TempMax}
 
-		for j := 0; j < numEmps; j++ {
-			var op string
-			var temp int
-			if _, err := fmt.Scan(&op, &temp); err != nil {
+		for empIndex := 0; empIndex < numEmps; empIndex++ {
+			var operation string
+			var temperature int
+
+			if _, err := fmt.Scan(&operation, &temperature); err != nil {
 				fmt.Println("Error: invalid input")
 				return
 			}
 
-			if err := dept.UpdateTemp(op, temp); err != nil {
+			if err := dept.UpdateTemp(operation, temperature); err != nil {
 				fmt.Println("Error:", err)
 				return
 			}
