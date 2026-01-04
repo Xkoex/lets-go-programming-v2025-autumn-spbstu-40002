@@ -19,13 +19,11 @@ var (
 	ErrReadEmployees   = errors.New("failed to read employees")
 )
 
-// DeptTemp يمثل مجال درجات الحرارة لكل قسم
 type DeptTemp struct {
 	Min int
 	Max int
 }
 
-// UpdateTemp يقوم بتحديث الحد الأعلى أو الأدنى حسب رأي الموظف
 func (d *DeptTemp) UpdateTemp(op string, temp int) error {
 	switch op {
 	case ">=":
@@ -43,7 +41,6 @@ func (d *DeptTemp) UpdateTemp(op string, temp int) error {
 	return nil
 }
 
-// CurrentTemp يعطي درجة الحرارة الحالية أو -1 إذا كانت غير صالحة
 func (d *DeptTemp) CurrentTemp() (int, error) {
 	if d.Min > d.Max {
 		return -1, ErrTempOutOfRange
@@ -53,39 +50,50 @@ func (d *DeptTemp) CurrentTemp() (int, error) {
 }
 
 func main() {
-	var numDeps int
-	if _, err := fmt.Scan(&numDeps); err != nil || numDeps < MinDepartments || numDeps > MaxDepartments {
+	var departments int
+
+	if _, err := fmt.Scan(&departments); err != nil ||
+		departments < MinDepartments || departments > MaxDepartments {
 		fmt.Println("Error:", ErrReadDepartments)
+
 		return
 	}
 
-	for i := 0; i < numDeps; i++ {
-		var numEmps int
-		if _, err := fmt.Scan(&numEmps); err != nil || numEmps < 1 {
+	for range departments {
+		var employees int
+
+		if _, err := fmt.Scan(&employees); err != nil || employees < 1 {
 			fmt.Println("Error:", ErrReadEmployees)
+
 			return
 		}
 
-		dept := DeptTemp{Min: TempMin, Max: TempMax}
+		dept := DeptTemp{
+			Min: TempMin,
+			Max: TempMax,
+		}
 
-		for j := 0; j < numEmps; j++ {
-			var op string
-			var temp int
-			if _, err := fmt.Scan(&op, &temp); err != nil {
+		for range employees {
+			var operator string
+			var temperature int
+
+			if _, err := fmt.Scan(&operator, &temperature); err != nil {
 				fmt.Println("Error: invalid input")
+
 				return
 			}
 
-			if err := dept.UpdateTemp(op, temp); err != nil {
+			if err := dept.UpdateTemp(operator, temperature); err != nil {
 				fmt.Println("Error:", err)
+
 				return
 			}
 
-			val, err := dept.CurrentTemp()
-			if err == nil {
-				fmt.Println(val)
-			} else {
+			value, err := dept.CurrentTemp()
+			if err != nil {
 				fmt.Println(-1)
+			} else {
+				fmt.Println(value)
 			}
 		}
 	}
